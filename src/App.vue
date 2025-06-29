@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="title">留言抽籤工具</h1>
     <p class="desc">
-      將DC留言複製到以下框，並注意換行。DC有限制一次可以複製的量，請留意是否有完整複製。
+      請將DC留言複製並貼入以下輸入框。由於DC限制一次複製的留言數量，建議每次複製約80則留言。每次複製時，請確保與上一次複製的內容之間有換行分隔，以避免資料混淆。
     </p>
 
     <div class="main">
@@ -136,7 +136,7 @@
   /* 左欄輸入框固定高度 */
   .left-panel textarea {
     width: 100%;
-    height: 150px;
+    height: 200px;
     resize: none;
     padding: 8px;
     border: 1px solid #ccc;
@@ -288,12 +288,17 @@ export default {
         return false
       }
 
+      const escapeRegExp = (string) =>
+        string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+      const escapedKeyword = escapeRegExp(this.keyword)
+
       const isPushLine = (line) =>
-        new RegExp(`^${this.keyword}[+]?\\d+$`).test(line)
+        new RegExp(`^${escapedKeyword}\\d+$`).test(line)
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i]
-        const match = line.match(new RegExp(`^${this.keyword}[+]?(\\d+)$`))
+        const match = line.match(new RegExp(`^${escapedKeyword}(\\d+)$`))
         if (match) {
           const number = parseInt(match[1])
 
@@ -302,8 +307,8 @@ export default {
           for (let j = i - 1; j >= 0 && i - j <= 5; j--) {
             const candidate = lines[j]
             if (!candidate) continue
-            if (isPushLine(candidate)) continue
             if (isPureMetaLine(candidate)) continue
+            if (isPushLine(candidate)) break
 
             if (candidate.includes('—')) {
               account = candidate.split('—')[0].trim()
