@@ -1,5 +1,16 @@
 <template>
   <div class="container">
+
+    <!-- 贊助連結 -->
+    <a
+      class="donate-link"
+      href="https://payment.opay.tw/Broadcaster/Donate/9F63A0D01BF401B3E4637E3CCB453A34"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      💖 贊助
+    </a>
+
     <h1 class="title">留言抽籤工具</h1>
     <p class="announcement">
       🎉 全新 <strong>更快速、準確、自動化</strong> 的抽籤工具 Chrome 擴充套件上線了！<br>
@@ -415,5 +426,24 @@ export default {
 
 .winners-ul li {
   margin-bottom: 4px;
+}
+
+.donate-link {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  background-color: #f43f5e;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  z-index: 1000;
+}
+
+.donate-link:hover {
+  background-color: #e11d48;
 }
 </style>
