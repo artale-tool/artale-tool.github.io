@@ -1,6 +1,10 @@
 <template>
   <div class="container">
     <h1 class="title">留言抽籤工具</h1>
+    <p class="announcement">
+      🎉 全新 <strong>更快速、準確、自動化</strong> 的抽籤工具 Chrome 擴充套件上線了！<br>
+      👉 <a href="https://github.com/artale-tool/discord-lottery-extension" target="_blank">點我前往 GitHub 下載</a>
+    </p>
     <p class="desc">
       請將 DC 留言複製並貼入以下輸入框。由於 DC 限制一次可複製的留言數量，建議每次複製約 80 則留言。每次複製時，請務必確保與上一次複製的內容之間有換行分隔，以避免資料混淆或遺漏。
     </p>
@@ -221,6 +225,14 @@ export default {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 8px;
+}
+
+.announcement {
+  background-color: #fff8dc;
+  border-left: 4px solid #ffa500;
+  padding: 10px;
+  margin-bottom: 1em;
+  font-size: 1.1em;
 }
 
 .desc {
