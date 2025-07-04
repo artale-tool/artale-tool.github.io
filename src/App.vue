@@ -33,6 +33,16 @@
           </div>
 
           <div class="option-group">
+            <label>推文數字位置：
+              <select v-model="numberPosition">
+                <option value="after">數字在關鍵字後（如 推1）</option>
+                <option value="before">數字在關鍵字前（如 1推）</option>
+                <option value="any">不限位置（同時支援 推1 和 1推）</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="option-group">
             <label>重複帳號處理：
               <select v-model="duplicateMode">
                 <option value="exclude">排除重複帳號</option>
@@ -108,6 +118,7 @@ export default {
     return {
       rawText: '',
       keyword: '推',
+      numberPosition: 'after',
       duplicateMode: 'exclude',
       parsed: [],
       drawCount: 1,
@@ -135,7 +146,19 @@ export default {
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i]
-        const match = line.match(new RegExp(`^${escapedKeyword}(\\d+)$`))
+        
+        let match = null;
+        if (this.numberPosition === 'after') {
+          match = line.match(new RegExp(`^${escapedKeyword}(\\d+)$`));
+        } else if (this.numberPosition === 'before') {
+          match = line.match(new RegExp(`^(\\d+)${escapedKeyword}$`));
+        } else if (this.numberPosition === 'any') {
+          match = line.match(new RegExp(`(?:^${escapedKeyword}(\\d+)$)|(?:^(\\d+)${escapedKeyword}$)`));
+          if (match) {
+            match[1] = match[1] || match[2]; // 統一取出數字
+          }
+        }
+
         if (match) {
           const number = parseInt(match[1])
           let account = null
@@ -214,8 +237,14 @@ export default {
       const maxDraw = this.parsed.length
       if (this.drawCount < 1) this.drawCount = 1
       if (this.drawCount > maxDraw) this.drawCount = maxDraw
-      const shuffled = [...this.parsed].sort(() => 0.5 - Math.random())
-      this.winners = shuffled.slice(0, this.drawCount)
+
+      // Fisher-Yates 洗牌演算法
+      const shuffled = [...this.parsed]; // 複製 parsed 避免修改原始資料
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      this.winners = shuffled.slice(0, this.drawCount);
     },
   },
 }
